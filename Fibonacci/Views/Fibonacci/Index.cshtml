@@ -1,0 +1,50 @@
+﻿@model FibonacciModel
+
+
+<h2>Fibonacci Calculator</h2>
+
+<form id="fibonacciForm">
+    <div>
+        <label for="Number">Number</label>
+        <input type="text" id="Number" name="Number" />
+        <span id="numberError"></span>
+    </div>
+
+    <div>
+        <input type="submit" value="Calculate" />
+    </div>
+</form>
+<div id="resultContainer"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="/_framework/aspnetcore-browser-refresh.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#fibonacciForm').submit(function (e) {
+            e.preventDefault();
+
+            var number = $('#Number').val();
+
+            $.ajax({
+                url: '/Fibonacci/Calculate',
+                type: 'POST',
+                data: { Number: number },
+                success: function (response) {
+                    var t = response.success;
+                    if (response.success) {                      
+                        $('#resultContainer').html('<h3>Result:</h3><p>' + response.result + '</p>');
+                    } else {
+                        $('#resultContainer').empty();
+                        $('#numberError').text(response.error);
+                    }
+                },
+                error: function () {
+                    $('#resultContainer').empty();
+                    $('#numberError').text('An error occurred during the request.');
+                }
+            });
+        });
+    });
+</script>
+
